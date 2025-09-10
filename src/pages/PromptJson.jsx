@@ -43,17 +43,19 @@ import { ReactComponent as SaweriaIcon } from "../assets/iconsweria.svg";
 const DROPDOWN_OPTIONS = {
   mode: [
     "Single prompt",
-    "Multi prompt",
-    "Batch mode",
-    "Advanced mode"
+    "Multiple selection",
+    "Bulk prompting"
   ],
   preset: [
-    "No preset",
-    "Realistic",
-    "Artistic",
-    "Cinematic",
-    "Portrait",
-    "Landscape"
+    "no style",
+    "3D Nendoroid",
+    "Watercolor gnomes",
+    "Cute kawaii",
+    "Fantasy world",
+    "Fantasy pattern",
+    "Comic book",
+    "Disney",
+    "Quirky creature"
   ],
   digitalProduct: [
     "fantasy illustration",
@@ -71,6 +73,7 @@ const DROPDOWN_OPTIONS = {
   ],
   creature: [
     "no style",
+    "-- HUMAN-LIKE --",
     "princess",
     "prince charming",
     "mermaid",
@@ -85,7 +88,55 @@ const DROPDOWN_OPTIONS = {
     "gnome",
     "dwarf",
     "satyr",
-    "nymph"
+    "nymph",
+
+    "-- MYTHICAL --",
+    "dragon",
+    "unicorn",
+    "phoenix",
+    "pegasus",
+    "minotaur",
+    "gargoyle",
+    "chimera",
+    "basilisk",
+    "cerberus",
+    "hydra",
+    "centaur",
+    "kraken",
+    "yeti",
+    "cyclops",
+
+    "-- SUPERNATURAL --",
+    "ghost",
+    "zombie",
+    "werewolf",
+    "goblin",
+    "orc",
+    "specter",
+    "banshee",
+    "wraith",
+    "demon",
+    "angel",
+    "djinn",
+    "poltergeist",
+    "wendigo",
+    "shadow",
+    "imp",
+    "-- LEGENDARY --",
+
+    "thunderbird",
+    "kitsune",
+    "leviathan",
+    "valkyrie",
+    "dullahan",
+
+    "-- HYBRID --",
+    "parrohorse (fantasy creature with parrot head and horse body)",
+    "griffin (fantasy creature with eagle head and wings and lion body)",
+    "phoenixicorn (mythical creature with the body of a unicorn and the fiery wings of a phoenix)",
+    "drakalope (fantasy creature with dragon wings and a rabbit-like body)",
+    "lizardfolk (powerful creature with a human-like body and lizard head)",
+    "owluman (wise creature with a human-like body and owl head)",
   ],
   creatureDetails: [
     "no style",
@@ -110,131 +161,363 @@ const DROPDOWN_OPTIONS = {
     "villain",
     "warrior",
     "dollcore",
-    "magical"
+    "musclecore",
+    "big eyes",
+    "exaggerated body proportions",
+    "with wings",
+    "with fangs",
+    "has hooves",
+    "has horn",
+    "clad in feathers",
+    "on fire",
+    "wearing dress",
+    "wearing costume",
+    "wearing hat",
+    "wearing pants",
+    "wearing shirt",
+    "wearing knitted apparel and tailed hat",
+    "wearing glasses",
+    "wearing armor",
+    "closeup view",
+    "front face view",
+    "profile view",
+    "portrait view",
+    "full body view",
+    "mascot",
+    "nendoroid"
   ],
   background: [
     "no style",
-    "forest",
-    "mountain",
-    "ocean",
-    "desert",
-    "city",
-    "castle",
-    "cave",
-    "sky",
-    "space",
-    "abstract"
+    "isolated on white",
+    "isolated on black",
+    "isolated on beige",
+    "isolated on green",
+    "isolated on blue",
+    "isolated on red",
+    "-- ENCHANTED REALMS --",
+    "fantasy world",
+    "magic castle",
+    "enchanted woods",
+    "fairy glade",
+    "mystical garden",
+    "wizard's tower interior",
+    "elven forest",
+    "celestial kingdom",
+    "spring meadow",
+    "lair in a cave",
+    "underwater lagoon",
+    "mushroom forest",
+    "-- MYTHICAL LANDSCAPES --",
+    "ancient ruins",
+    "mystical mountains",
+    "underwater city",
+    "fiery volcano",
+    "frozen wasteland",
+    "haunted mansion",
+    "celestial palace",
+    "dark abyss",
+    "enchanted lake",
+    "celestial gardens",
+    "-- OTHERWORLDLY SETTINGS --",
+    "steampunk city",
+    "alien planet",
+    "cybernetic world",
+    "post-apocalyptic wasteland",
+    "celestial observatory",
+    "time-traveling dimension",
+    "underwater caverns",
+    "cosmic void",
+    "magical marketplace",
+    "dreamlike realm"
   ],
   moodVibeAtmosphere: [
     "no style",
-    "dramatic",
-    "peaceful",
-    "mysterious",
-    "epic",
-    "romantic",
-    "dark",
-    "bright",
-    "ethereal",
-    "intense"
+    "-- EMOTIONS --",
+    "joyful emotion",
+    "fearful emotion",
+    "wondrous emotion",
+    "melancholic emotion",
+    "excited emotion",
+    "serene emotion",
+    "smiling",
+    "fierce emotion",
+    "determined emotion",
+    "-- VIBE --",
+    "enchanting vibe",
+    "whimsical vibe",
+    "mystical vibe",
+    "ethereal vibe",
+    "heroic vibe",
+    "grand vibe",
+    "adventurous vibe",
+    "eerie vibe",
+    "spooky vibe",
+    "foreboding vibe",
+    "-- ATMOSPHERE --",
+    "fairy-tale atmosphere",
+    "mythic atmosphere",
+    "valiant atmosphere",
+    "elemental atmosphere",
+    "wild atmosphere",
+    "cosmic atmosphere",
+    "futuristic atmosphere",
+    "alien atmosphere",
+    "surreal atmosphere"
   ],
   colorPalette: [
     "no style",
-    "warm tones",
-    "cool tones",
     "monochrome",
+    "light",
+    "dark",
+    "pale",
+    "bright",
+    "retro",
+    "desaturated",
+    "saturated",
+    "subtle",
+    "muted",
+    "mild tones",
+    "vintage",
+    "ombre shading",
+    "pure",
+    "matte",
+    "faded",
+    "rich",
+    "vivid",
     "vibrant",
-    "pastel",
-    "earth tones",
+    "acid",
+    "shiny",
+    "luminescent",
+    "glowing",
+    "glittery",
+    "metallic",
     "neon",
-    "vintage"
+    "duotone",
+    "color pop"
   ],
   colorPreset: [
     "no style",
-    "sunset",
-    "ocean",
-    "forest",
-    "autumn",
-    "winter",
-    "spring",
-    "summer",
-    "noir",
-    "cyberpunk"
+    "neutral",
+    "eco",
+    "pastel",
+    "cool-toned",
+    "warm-toned",
+    "night",
+    "light gold and bronze",
+    "dark blue and mahogany",
+    "night",
+    "beige white",
+    "beige grey",
+    "silver blue",
+    "blue pink",
+    "pink purple",
+    "brown green",
+    "violet gold",
+    "bronze blue",
+    "white silver",
+    "green black",
+    "red navy blue",
+    "orange purple",
+    "maroon silver pink",
+    "shades of beige",
+    "shades of pink",
+    "shades of maroon",
+    "shades of violet",
+    "shades of yellow",
+    "shades of red",
+    "shades of orange",
+    "shades of purple",
+    "shades of blue",
+    "shades of green",
+    "shades of brown",
+    "grayscale",
+    "black and white"
   ],
   basicStyle: [
     "no style",
-    "realistic",
-    "cartoon",
-    "anime",
-    "pixel art",
-    "watercolor",
-    "oil painting",
-    "sketch",
-    "digital painting"
+    "2D flat",
+    "3D",
+    "cute",
+    "cartoonish",
+    "minimalistic",
+    "futuristic",
+    "simple",
+    "vector",
+    "photorealistic",
+    "realistic yet ethereal",
+    "isometric",
+    "carved paper",
+    "abstract",
+    "geometric",
+    "multi-layered"
   ],
   artStyle: [
     "no style",
-    "impressionist",
-    "surreal",
-    "abstract",
-    "minimalist",
-    "baroque",
-    "art nouveau",
-    "art deco",
-    "modern",
-    "contemporary"
+    "-- GENERIC --",
+    "anime art",
+    "airbrush art",
+    "acrylic paint",
+    "charcoal sketch",
+    "concept art",
+    "digital art",
+    "oil paint",
+    "pencil hand drawing",
+    "vector art",
+    "watercolor paint",
+    "-- ARTISTS AND STUDIOS --",
+    "inspired by Anna Haifisch",
+    "inspired by Artgerm",
+    "inspired by Bill Watterson",
+    "inspired by Boris Vallejo",
+    "inspired by Charles Schulz",
+    "inspired by Disney concept art",
+    "inspired by Dreamworks animation studio",
+    "inspired by Frank Frazetta",
+    "inspired by Gerald Brom",
+    "inspired by Glen Keane",
+    "inspired by Luis Royo",
+    "inspired by Marc Bell",
+    "inspired by Matt Groening",
+    "inspired by Matthew Abram",
+    "inspired by Osamu Tezuka",
+    "inspired by Pixar cartoon",
+    "inspired by studio Ghibli",
+    "-- ART STYLE --",
+    "8-bit art style",
+    "baroque style",
+    "batik style",
+    "Chibi style",
+    "Chinese MMO style",
+    "cyber guochao style",
+    "dark synth style",
+    "encaustic style",
+    "folk art style",
+    "glampunk style",
+    "gothic art style",
+    "impasto style",
+    "kawaii style",
+    "kirigami style",
+    "magic realism style",
+    "mosaic style",
+    "steampunk style",
+    "tilt-shift photography style"
   ],
   styleDetails: [
     "no style",
-    "highly detailed",
-    "soft lighting",
-    "dramatic lighting",
-    "studio lighting",
-    "natural lighting",
-    "backlighting",
-    "rim lighting"
+    "symmetrical",
+    "very detailed 8K",
+    "low detail",
+    "soft-edged",
+    "sharp-edged",
+    "high contrast",
+    "strong shadows",
+    "chiaroscuro",
+    "contour and clear outlines",
+    "suitable for coloring",
+    "line art drawing",
+    "hand painted",
+    "hand drawn lines",
+    "handmade drawing",
+    "solid colors",
+    "elongated forms",
+    "flowing silhouettes",
+    "transparency and opacity",
+    "whimsical illustration",
+    "quirky characters",
+    "elaborate details",
+    "muted whimsy"
   ],
   midjourneyVersion: [
     "no style",
-    "v6",
-    "v5.2",
-    "v5.1",
-    "v5",
-    "v4",
-    "niji 6",
-    "niji 5"
+    "--v 7",
+    "--v 6.1",
+    "--v 6.0",
+    "--v 5.2",
+    "--v 5.1",
+    "--v 5.0",
+    "--niji 6",
+    "--niji 5",
+    "--niji 4",
+    "--v 4.0",
+    "--v 3.0",
+    "--v 2.0",
+    "--v 1.0"
   ],
   stylizeValue: [
     "no style",
-    "0",
-    "25",
-    "50",
-    "100",
-    "250",
-    "500",
-    "750",
-    "1000"
+    "--s 0",
+    "--s 10",
+    "--s 50",
+    "--s 100",
+    "--s 250",
+    "--s 300",
+    "--s 500",
+    "--s 750",
+    "--s 1000",
+    "--style raw",
+    "--iw 1",
+    "--iw 2",
+    "--iw 3",
+    "--cw 0",
+    "--cw 10",
+    "--cw 50",
+    "--cw 100",
+    "--sw 10",
+    "--sw 50",
+    "--sw 100",
+    "--sw 250",
+    "--sw 300",
+    "--sw 500",
+    "--sw 750",
+    "--sw 1000"
   ],
   aspectRatio: [
     "no style",
-    "1:1",
-    "16:9",
-    "9:16",
-    "4:3",
-    "3:4",
-    "21:9",
-    "2:3",
-    "3:2"
+    "--ar 1:1",
+    "--ar 9:16",
+    "--ar 16:9",
+    "--ar 1:2",
+    "--ar 2:1",
+    "--ar 3:4",
+    "--ar 4:3",
+    "--ar 2:3",
+    "--ar 3:2",
+    "--ar 17:22",
+    "--ar 22:17",
+    "--tile"
   ],
   parametersToExclude: [
     "no style",
-    "blurry",
-    "low quality",
-    "text",
-    "watermark",
-    "signature",
-    "extra limbs",
-    "deformed",
-    "bad anatomy"
+    "--no background (transparent background)",
+    "--no humans, people, children, men, women",
+    "--no water",
+    "--no trees",
+    "--no frame",
+    "--no buildings",
+    "--no greenery",
+    "--no fangs",
+    "--no wings",
+    "--no freckles",
+    "--no animals",
+    "--no tail",
+    "--no colors",
+    "--no flowers",
+    "--no eyes",
+    "--no eyes brows cheeks ears",
+    "--no shading",
+    "--no gradient",
+    "--no shading, gradient",
+    "--no skulls",
+    "--no white",
+    "--no grey",
+    "--no black",
+    "--no yellow",
+    "--no orange",
+    "--no pink",
+    "--no red",
+    "--no blue",
+    "--no green",
+    "--no purple"
   ]
 };
 
@@ -571,7 +854,7 @@ export default function PromptJsonEnhanced() {
                     bgClip="text"
                     lineHeight="shorter"
                   >
-                    Midjourney Prompt Builder
+                    Fantasy Prompt Builder
                   </Heading>
                   <Text 
                     color={mutedColor} 
@@ -579,7 +862,7 @@ export default function PromptJsonEnhanced() {
                     maxW="2xl"
                     lineHeight="tall"
                   >
-                    Buat prompt AI untuk image generation dengan form yang mudah digunakan
+                    Buat prompt AI Fantasy untuk image generation dengan form yang sudah disiapkan
                   </Text>
                 </VStack>
 
@@ -832,7 +1115,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= OR/AND type in your creature"
+                              placeholder="--type in your creature--"
                               value={formData.customCreature}
                               onChange={(e) => updateFormData('customCreature', e.target.value)}
                               bg={inputBg}
@@ -848,7 +1131,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= OR/AND type in your custom details"
+                              placeholder="--type in your custom details--"
                               value={formData.customDetails}
                               onChange={(e) => updateFormData('customDetails', e.target.value)}
                               bg={inputBg}
@@ -916,7 +1199,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= type in your desired colors"
+                              placeholder="--type in your desired colors--"
                               value={formData.customColors}
                               onChange={(e) => updateFormData('customColors', e.target.value)}
                               bg={inputBg}
@@ -989,7 +1272,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= type in your style or details"
+                              placeholder="--type in your style or details--"
                               value={formData.customStyleOrDetails}
                               onChange={(e) => updateFormData('customStyleOrDetails', e.target.value)}
                               bg={inputBg}
@@ -1076,7 +1359,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= Paste the link to the generic reference image"
+                              placeholder="--Paste the link to the generic reference image--"
                               value={formData.imageRefImage}
                               onChange={(e) => updateFormData('imageRefImage', e.target.value)}
                               bg={inputBg}
@@ -1092,7 +1375,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= Paste the link to the character reference image"
+                              placeholder="--Paste the link to the character reference image--"
                               value={formData.characterRefImage}
                               onChange={(e) => updateFormData('characterRefImage', e.target.value)}
                               bg={inputBg}
@@ -1108,7 +1391,7 @@ export default function PromptJsonEnhanced() {
                           </GridItem>
                           <GridItem>
                             <Input
-                              placeholder="<= Paste the link to the style reference image"
+                              placeholder="--Paste the link to the style reference image--"
                               value={formData.styleRefImage}
                               onChange={(e) => updateFormData('styleRefImage', e.target.value)}
                               bg={inputBg}
