@@ -6,7 +6,6 @@ import {
   Input,
   Text,
   VStack,
-  IconButton,
   HStack,
   useToast,
   Badge,
@@ -19,106 +18,268 @@ import {
   useClipboard,
   Select,
   Textarea,
-  Collapse,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Stack,
-  Tooltip,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
   FormControl,
   FormLabel,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import { 
-  AddIcon, 
-  DeleteIcon, 
-  EditIcon,
   CopyIcon,
   CheckIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  SettingsIcon,
 } from "@chakra-ui/icons";
 import { 
   FiHome, 
-  FiPlus, 
   FiCode, 
   FiZap,
-  FiLayers,
   FiTarget,
-  FiType,
-  FiHash,
-  FiList,
-  FiPackage,
-  FiChevronDown,
-  FiChevronRight,
-  FiMoreHorizontal,
-  FiSettings,
-  FiSave,
+  FiLayers,
+  FiRefreshCw,
 } from "react-icons/fi";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { ReactComponent as SaweriaIcon } from "../assets/iconsweria.svg";
 
-// Field types constants
-const FIELD_TYPES = {
-  STRING: 'string',
-  NUMBER: 'number',
-  ARRAY: 'array',
-  OBJECT: 'object'
-};
-
-// Field type configurations
-const FIELD_TYPE_CONFIG = {
-  [FIELD_TYPES.STRING]: {
-    icon: FiType,
-    label: 'Text',
-    color: 'blue',
-    description: 'Simple text value'
-  },
-  [FIELD_TYPES.NUMBER]: {
-    icon: FiHash,
-    label: 'Number',
-    color: 'green',
-    description: 'Numeric value'
-  },
-  [FIELD_TYPES.ARRAY]: {
-    icon: FiList,
-    label: 'Array',
-    color: 'purple',
-    description: 'List of values'
-  },
-  [FIELD_TYPES.OBJECT]: {
-    icon: FiPackage,
-    label: 'Object',
-    color: 'orange',
-    description: 'Nested structure'
-  }
+// Default options for dropdowns
+const DROPDOWN_OPTIONS = {
+  mode: [
+    "Single prompt",
+    "Multi prompt",
+    "Batch mode",
+    "Advanced mode"
+  ],
+  preset: [
+    "No preset",
+    "Realistic",
+    "Artistic",
+    "Cinematic",
+    "Portrait",
+    "Landscape"
+  ],
+  digitalProduct: [
+    "fantasy illustration",
+    "clipart",
+    "sticker",
+    "illustration",
+    "coloring page for kids",
+    "coloring page for adults",
+    "ui poster",
+    "background image",
+    "frame",
+    "invitation frame",
+    "pattern",
+    "digital paper"
+  ],
+  creature: [
+    "no style",
+    "princess",
+    "prince charming",
+    "mermaid",
+    "vampire",
+    "witch",
+    "wizard",
+    "siren",
+    "genie",
+    "fairy",
+    "elf",
+    "ogre",
+    "gnome",
+    "dwarf",
+    "satyr",
+    "nymph"
+  ],
+  creatureDetails: [
+    "no style",
+    "male",
+    "female",
+    "huge",
+    "big",
+    "tiny",
+    "little",
+    "young",
+    "mature",
+    "old",
+    "charming",
+    "cute",
+    "adorable",
+    "quirky",
+    "monstrous",
+    "funny",
+    "comical",
+    "kind",
+    "evil",
+    "villain",
+    "warrior",
+    "dollcore",
+    "magical"
+  ],
+  background: [
+    "no style",
+    "forest",
+    "mountain",
+    "ocean",
+    "desert",
+    "city",
+    "castle",
+    "cave",
+    "sky",
+    "space",
+    "abstract"
+  ],
+  moodVibeAtmosphere: [
+    "no style",
+    "dramatic",
+    "peaceful",
+    "mysterious",
+    "epic",
+    "romantic",
+    "dark",
+    "bright",
+    "ethereal",
+    "intense"
+  ],
+  colorPalette: [
+    "no style",
+    "warm tones",
+    "cool tones",
+    "monochrome",
+    "vibrant",
+    "pastel",
+    "earth tones",
+    "neon",
+    "vintage"
+  ],
+  colorPreset: [
+    "no style",
+    "sunset",
+    "ocean",
+    "forest",
+    "autumn",
+    "winter",
+    "spring",
+    "summer",
+    "noir",
+    "cyberpunk"
+  ],
+  basicStyle: [
+    "no style",
+    "realistic",
+    "cartoon",
+    "anime",
+    "pixel art",
+    "watercolor",
+    "oil painting",
+    "sketch",
+    "digital painting"
+  ],
+  artStyle: [
+    "no style",
+    "impressionist",
+    "surreal",
+    "abstract",
+    "minimalist",
+    "baroque",
+    "art nouveau",
+    "art deco",
+    "modern",
+    "contemporary"
+  ],
+  styleDetails: [
+    "no style",
+    "highly detailed",
+    "soft lighting",
+    "dramatic lighting",
+    "studio lighting",
+    "natural lighting",
+    "backlighting",
+    "rim lighting"
+  ],
+  midjourneyVersion: [
+    "no style",
+    "v6",
+    "v5.2",
+    "v5.1",
+    "v5",
+    "v4",
+    "niji 6",
+    "niji 5"
+  ],
+  stylizeValue: [
+    "no style",
+    "0",
+    "25",
+    "50",
+    "100",
+    "250",
+    "500",
+    "750",
+    "1000"
+  ],
+  aspectRatio: [
+    "no style",
+    "1:1",
+    "16:9",
+    "9:16",
+    "4:3",
+    "3:4",
+    "21:9",
+    "2:3",
+    "3:2"
+  ],
+  parametersToExclude: [
+    "no style",
+    "blurry",
+    "low quality",
+    "text",
+    "watermark",
+    "signature",
+    "extra limbs",
+    "deformed",
+    "bad anatomy"
+  ]
 };
 
 export default function PromptJsonEnhanced() {
-  const [subject, setSubject] = useState("");
-  const [fields, setFields] = useState([]);
+  // Form state
+  const [formData, setFormData] = useState({
+    // Header
+    mode: "Single prompt",
+    preset: "No preset",
+
+    // Composition
+    digitalProduct: "fantasy illustration",
+    creature: "no style",
+    creatureDetails: "no style",
+    background: "no style",
+    moodVibeAtmosphere: "no style",
+    customCreature: "",
+    customDetails: "",
+
+    // Style
+    colorPalette: "no style",
+    colorPreset: "no style",
+    customColors: "",
+    basicStyle: "no style",
+    artStyle: "no style",
+    styleDetails: "no style",
+    customStyleOrDetails: "",
+
+    // Parameters
+    midjourneyVersion: "no style",
+    stylizeValue: "no style",
+    aspectRatio: "no style",
+    imageRefImage: "",
+    characterRefImage: "",
+    styleRefImage: "",
+    parametersToExclude: "no style"
+  });
+
   const [jsonResult, setJsonResult] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [editingField, setEditingField] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
+  const [textPrompt, setTextPrompt] = useState("");
+  const [outputFormat, setOutputFormat] = useState("both"); // "json", "text", "both"
 
   const toast = useToast();
-  const { hasCopied, onCopy } = useClipboard(prompt);
-  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+  const { hasCopied, onCopy } = useClipboard(outputFormat === "json" ? prompt : outputFormat === "text" ? textPrompt : `${textPrompt}\n\n--- JSON ---\n${prompt}`);
 
   // Color mode values
   const bgGradient = useColorModeValue(
@@ -129,596 +290,223 @@ export default function PromptJsonEnhanced() {
   const textColor = useColorModeValue("gray.800", "gray.100");
   const mutedColor = useColorModeValue("gray.600", "gray.400");
   const inputBg = useColorModeValue("gray.50", "gray.700");
-  const fieldBg = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const borderColorFocus = useColorModeValue("white", "gray.700");
 
-  // Generate unique ID
-  const generateId = () => Date.now() + Math.random();
-
-  // Add field function
-  const addField = useCallback((parentId = null, type = FIELD_TYPES.STRING, insertAfter = null) => {
-    const parentField = parentId ? fields.find(f => f.id === parentId) : null;
-    const level = parentField ? parentField.level + 1 : 0;
-
-    const newField = {
-      id: generateId(),
-      title: type === FIELD_TYPES.OBJECT ? "new_object" : "new_field",
-      type,
-      value: type === FIELD_TYPES.ARRAY ? [''] : type === FIELD_TYPES.NUMBER ? 0 : "",
-      level,
-      parentId,
-      isExpanded: true
-    };
-
-    setFields(prev => {
-      let insertIndex = insertAfter ?
-        prev.findIndex(f => f.id === insertAfter) + 1 :
-        prev.length;
-
-      // If adding to a parent, insert after all children
-      if (parentId && !insertAfter) {
-        const parentIndex = prev.findIndex(f => f.id === parentId);
-        let lastChildIndex = parentIndex;
-
-        for (let i = parentIndex + 1; i < prev.length; i++) {
-          if (prev[i].level <= prev[parentIndex].level) break;
-          lastChildIndex = i;
-        }
-        insertIndex = lastChildIndex + 1;
-      }
-
-      const newFields = [...prev];
-      newFields.splice(insertIndex, 0, newField);
-      return newFields;
-    });
-
-    toast({
-      title: "Field Ditambahkan",
-      description: `Field ${FIELD_TYPE_CONFIG[type].label} berhasil ditambahkan`,
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-      position: "bottom-right",
-    });
-  }, [fields, toast]);
-
-  // Update field function
-  const updateField = useCallback((id, updates) => {
-    setFields(prev => prev.map(field =>
-      field.id === id ? { ...field, ...updates } : field
-    ));
+  // Update form data
+  const updateFormData = useCallback((field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   }, []);
 
-  // Remove field function
-  const removeField = useCallback((id) => {
-    setFields(prev => {
-      const fieldIndex = prev.findIndex(f => f.id === id);
-      if (fieldIndex === -1) return prev;
-
-      const field = prev[fieldIndex];
-      const newFields = [];
-
-      // Remove field and all its children
-      for (let i = 0; i < prev.length; i++) {
-        if (i === fieldIndex) continue;
-
-        if (i > fieldIndex && prev[i].level > field.level) {
-          // Skip children of removed field
-          continue;
-        }
-
-        newFields.push(prev[i]);
-      }
-
-      return newFields;
+  // Reset all form data
+  const resetAll = useCallback(() => {
+    setFormData({
+      mode: "Single prompt",
+      preset: "No preset",
+      digitalProduct: "fantasy illustration",
+      creature: "no style",
+      creatureDetails: "no style",
+      background: "no style",
+      moodVibeAtmosphere: "no style",
+      customCreature: "",
+      customDetails: "",
+      colorPalette: "no style",
+      colorPreset: "no style",
+      customColors: "",
+      basicStyle: "no style",
+      artStyle: "no style",
+      styleDetails: "no style",
+      customStyleOrDetails: "",
+      midjourneyVersion: "no style",
+      stylizeValue: "no style",
+      aspectRatio: "no style",
+      imageRefImage: "",
+      characterRefImage: "",
+      styleRefImage: "",
+      parametersToExclude: "no style"
     });
+    setJsonResult("");
+    setPrompt("");
+    setTextPrompt("");
 
     toast({
-      title: "Field Dihapus",
-      description: "Field berhasil dihapus",
+      title: "Form Reset",
+      description: "Semua field telah direset ke nilai default",
       status: "info",
       duration: 2000,
       isClosable: true,
-      position: "bottom-right",
+      position: "top",
     });
   }, [toast]);
 
-  // Edit field title - FIXED: Using modal instead of prompt
-  const openEditModal = useCallback((id) => {
-    const field = fields.find(f => f.id === id);
-    if (field) {
-      setEditingField(field);
-      setEditTitle(field.title);
-      onEditOpen();
+  // Generate text prompt format
+  const generateTextPrompt = useCallback((data) => {
+    let textParts = [];
+
+    // Add digital product as base
+    textParts.push(data.digitalProduct);
+
+    // Add creature and details
+    if (data.creature !== "no style") {
+      textParts.push(data.creature);
     }
-  }, [fields, onEditOpen]);
-
-  // Save edited title
-  const saveEditedTitle = useCallback(() => {
-    if (editingField && editTitle.trim()) {
-      updateField(editingField.id, { title: editTitle.trim() });
-      toast({
-        title: "Field Diperbarui",
-        description: "Nama field berhasil diperbarui",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
+    if (data.creatureDetails !== "no style") {
+      textParts.push(data.creatureDetails);
     }
-    setEditingField(null);
-    setEditTitle("");
-    onEditClose();
-  }, [editingField, editTitle, updateField, onEditClose, toast]);
-
-  // Toggle object expansion
-  const toggleExpanded = useCallback((id) => {
-    updateField(id, { isExpanded: !fields.find(f => f.id === id).isExpanded });
-  }, [fields, updateField]);
-
-  // Add array item
-  const addArrayItem = useCallback((fieldId) => {
-    const field = fields.find(f => f.id === fieldId);
-    if (field && field.type === FIELD_TYPES.ARRAY) {
-      const newValue = [...field.value, ''];
-      updateField(fieldId, { value: newValue });
+    if (data.customCreature) {
+      textParts.push(data.customCreature);
     }
-  }, [fields, updateField]);
-
-  // Remove array item
-  const removeArrayItem = useCallback((fieldId, index) => {
-    const field = fields.find(f => f.id === fieldId);
-    if (field && field.type === FIELD_TYPES.ARRAY) {
-      const newValue = field.value.filter((_, i) => i !== index);
-      updateField(fieldId, { value: newValue.length > 0 ? newValue : [''] });
+    if (data.customDetails) {
+      textParts.push(data.customDetails);
     }
-  }, [fields, updateField]);
 
-  // Update array item
-  const updateArrayItem = useCallback((fieldId, index, value) => {
-    const field = fields.find(f => f.id === fieldId);
-    if (field && field.type === FIELD_TYPES.ARRAY) {
-      const newValue = [...field.value];
-      newValue[index] = value;
-      updateField(fieldId, { value: newValue });
+    // Add background
+    if (data.background !== "no style") {
+      textParts.push(`${data.background} background`);
     }
-  }, [fields, updateField]);
 
-  // Generate JSON from fields
-  const generateJsonFromFields = useCallback(() => {
-    const result = {};
+    // Add mood/atmosphere
+    if (data.moodVibeAtmosphere !== "no style") {
+      textParts.push(`${data.moodVibeAtmosphere} atmosphere`);
+    }
 
-    const processFields = (parentId, targetObj) => {
-      const fieldsAtLevel = fields.filter(f => f.parentId === parentId);
+    // Add style elements
+    if (data.basicStyle !== "no style") {
+      textParts.push(data.basicStyle);
+    }
+    if (data.artStyle !== "no style") {
+      textParts.push(`${data.artStyle} style`);
+    }
+    if (data.styleDetails !== "no style") {
+      textParts.push(data.styleDetails);
+    }
+    if (data.customStyleOrDetails) {
+      textParts.push(data.customStyleOrDetails);
+    }
 
-      fieldsAtLevel.forEach(field => {
-        if (field.type === FIELD_TYPES.OBJECT) {
-          targetObj[field.title] = {};
-          processFields(field.id, targetObj[field.title]);
-        } else if (field.type === FIELD_TYPES.ARRAY) {
-          targetObj[field.title] = field.value.filter(v => v.trim() !== '');
-        } else if (field.type === FIELD_TYPES.NUMBER) {
-          targetObj[field.title] = field.value;
-        } else {
-          if (field.value.trim() !== '') {
-            targetObj[field.title] = field.value;
-          }
-        }
-      });
+    // Add color information
+    if (data.colorPalette !== "no style") {
+      textParts.push(`${data.colorPalette} color palette`);
+    }
+    if (data.colorPreset !== "no style") {
+      textParts.push(`${data.colorPreset} colors`);
+    }
+    if (data.customColors) {
+      textParts.push(`colors: ${data.customColors}`);
+    }
+
+    // Join main prompt parts
+    let mainPrompt = textParts.join(", ");
+
+    // Add parameters
+    let parameters = [];
+
+    if (data.midjourneyVersion !== "no style") {
+      parameters.push(`--v ${data.midjourneyVersion}`);
+    }
+    if (data.stylizeValue !== "no style") {
+      parameters.push(`--s ${data.stylizeValue}`);
+    }
+    if (data.aspectRatio !== "no style") {
+      parameters.push(`--ar ${data.aspectRatio}`);
+    }
+    if (data.parametersToExclude !== "no style") {
+      parameters.push(`--no ${data.parametersToExclude}`);
+    }
+
+    // Add reference images
+    if (data.imageRefImage) {
+      mainPrompt = `${data.imageRefImage} ${mainPrompt}`;
+    }
+    if (data.characterRefImage) {
+      parameters.push(`--cref ${data.characterRefImage}`);
+    }
+    if (data.styleRefImage) {
+      parameters.push(`--sref ${data.styleRefImage}`);
+    }
+
+    // Combine prompt with parameters
+    let finalPrompt = mainPrompt;
+    if (parameters.length > 0) {
+      finalPrompt += ` ${parameters.join(" ")}`;
+    }
+
+    return finalPrompt;
+  }, []);
+
+  // Generate JSON and prompt
+  const generate = useCallback(() => {
+    // Create JSON object
+    const jsonObj = {
+      mode: formData.mode,
+      preset: formData.preset,
+      composition: {
+        digital_product: formData.digitalProduct,
+        creature: formData.creature !== "no style" ? formData.creature : null,
+        creature_details: formData.creatureDetails !== "no style" ? formData.creatureDetails : null,
+        background: formData.background !== "no style" ? formData.background : null,
+        mood_vibe_atmosphere: formData.moodVibeAtmosphere !== "no style" ? formData.moodVibeAtmosphere : null,
+        custom_creature: formData.customCreature || null,
+        custom_details: formData.customDetails || null
+      },
+      style: {
+        color_palette: formData.colorPalette !== "no style" ? formData.colorPalette : null,
+        color_preset: formData.colorPreset !== "no style" ? formData.colorPreset : null,
+        custom_colors: formData.customColors || null,
+        basic_style: formData.basicStyle !== "no style" ? formData.basicStyle : null,
+        art_style: formData.artStyle !== "no style" ? formData.artStyle : null,
+        style_details: formData.styleDetails !== "no style" ? formData.styleDetails : null,
+        custom_style_or_details: formData.customStyleOrDetails || null
+      },
+      parameters: {
+        midjourney_version: formData.midjourneyVersion !== "no style" ? formData.midjourneyVersion : null,
+        stylize_value: formData.stylizeValue !== "no style" ? formData.stylizeValue : null,
+        aspect_ratio: formData.aspectRatio !== "no style" ? formData.aspectRatio : null,
+        image_ref_image: formData.imageRefImage || null,
+        character_ref_image: formData.characterRefImage || null,
+        style_ref_image: formData.styleRefImage || null,
+        parameters_to_exclude: formData.parametersToExclude !== "no style" ? formData.parametersToExclude : null
+      }
     };
 
-    processFields(null, result);
-    return result;
-  }, [fields]);
+    // Remove null values
+    const cleanObj = JSON.parse(JSON.stringify(jsonObj, (k, v) => v === null ? undefined : v));
 
-  // Generate complete prompt
-  const generate = useCallback(() => {
-    if (!subject.trim()) {
-      toast({
-        title: "Subjek Diperlukan",
-        description: "Mohon masukkan subjek prompt terlebih dahulu",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
-      return;
-    }
-
-    const jsonObj = generateJsonFromFields();
-    const jsonString = JSON.stringify(jsonObj, null, 2);
+    const jsonString = JSON.stringify(cleanObj, null, 2);
     setJsonResult(jsonString);
 
-    // Create complete prompt with subject separate from JSON
-    const completePrompt = `${subject.trim()}\n\n${jsonString}`;
-    setPrompt(completePrompt);
+    // Create prompt text
+    const promptText = `Create ${formData.digitalProduct} with the following specifications:\n\n${jsonString}`;
+    setPrompt(promptText);
+
+    // Generate text format prompt
+    const textFormatPrompt = generateTextPrompt(formData);
+    setTextPrompt(textFormatPrompt);
     
     toast({
       title: "Prompt Generated!",
-      description: "Prompt JSON berhasil dibuat dan siap untuk dicopy",
+      description: "Prompt berhasil dibuat dalam format JSON dan Text",
       status: "success",
       duration: 3000,
       isClosable: true,
       position: "top",
     });
-  }, [subject, generateJsonFromFields, toast]);
+  }, [formData, toast]);
 
   const handleCopy = () => {
     onCopy();
     toast({
       title: "Berhasil Dicopy!",
-      description: "JSON prompt telah disalin ke clipboard",
+      description: "Prompt telah disalin ke clipboard",
       status: "success",
       duration: 2000,
       isClosable: true,
       position: "bottom-right",
     });
   };
-
-  // Load template - IMPROVED: Better template structure
-  const loadTemplate = () => {
-    const templateFields = [
-      { id: 1, title: "style", type: FIELD_TYPES.STRING, value: "modern minimalist", level: 0, parentId: null, isExpanded: true },
-      { id: 2, title: "material", type: FIELD_TYPES.OBJECT, value: "", level: 0, parentId: null, isExpanded: true },
-      { id: 3, title: "base", type: FIELD_TYPES.STRING, value: "premium plastic", level: 1, parentId: 2, isExpanded: true },
-      { id: 4, title: "texture", type: FIELD_TYPES.STRING, value: "smooth matte", level: 1, parentId: 2, isExpanded: true },
-      { id: 5, title: "finish", type: FIELD_TYPES.STRING, value: "semi-gloss", level: 1, parentId: 2, isExpanded: true },
-      { id: 6, title: "lighting", type: FIELD_TYPES.OBJECT, value: "", level: 0, parentId: null, isExpanded: true },
-      { id: 7, title: "type", type: FIELD_TYPES.STRING, value: "soft studio lighting", level: 1, parentId: 6, isExpanded: true },
-      { id: 8, title: "intensity", type: FIELD_TYPES.STRING, value: "balanced", level: 1, parentId: 6, isExpanded: true },
-      { id: 9, title: "color_scheme", type: FIELD_TYPES.OBJECT, value: "", level: 0, parentId: null, isExpanded: true },
-      { id: 10, title: "primary", type: FIELD_TYPES.ARRAY, value: ["#2563eb", "#7c3aed", "#dc2626"], level: 1, parentId: 9, isExpanded: true },
-      { id: 11, title: "secondary", type: FIELD_TYPES.ARRAY, value: ["#64748b", "#f1f5f9", "#0f172a"], level: 1, parentId: 9, isExpanded: true },
-      { id: 12, title: "contrast", type: FIELD_TYPES.STRING, value: "high", level: 1, parentId: 9, isExpanded: true },
-    ];
-
-    setFields(templateFields);
-    setSubject("Generate image based on the following design specifications");
-
-    toast({
-      title: "Template Dimuat!",
-      description: "Template design modern berhasil dimuat",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
-  };
-
-  // Render field based on type
-  const renderFieldInput = (field) => {
-    const config = FIELD_TYPE_CONFIG[field.type];
-    const indentStyle = { marginLeft: `${field.level * 20}px` };
-
-    switch (field.type) {
-      case FIELD_TYPES.STRING:
-        return (
-          <Box style={indentStyle}>
-            <VStack spacing={2} align="stretch">
-              <HStack justify="space-between">
-                <HStack>
-                  <Icon as={config.icon} color={`${config.color}.500`} />
-                  <Text fontWeight="bold" color={textColor} fontSize="sm">
-                    {field.title}
-                  </Text>
-                  <Badge colorScheme={config.color} variant="subtle" size="sm">
-                    {config.label}
-                  </Badge>
-                </HStack>
-                <HStack spacing={1}>
-                  <IconButton
-                    size="xs"
-                    icon={<EditIcon />}
-                    aria-label="Edit title"
-                    onClick={() => openEditModal(field.id)}
-                    colorScheme="blue"
-                    variant="ghost"
-                  />
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      icon={<AddIcon />}
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="green"
-                    />
-                    <MenuList>
-                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.parentId, FIELD_TYPES.STRING, field.id)}>
-                        Add Text Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.parentId, FIELD_TYPES.NUMBER, field.id)}>
-                        Add Number Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.parentId, FIELD_TYPES.ARRAY, field.id)}>
-                        Add Array Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.parentId, FIELD_TYPES.OBJECT, field.id)}>
-                        Add Object Field
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                  <IconButton
-                    size="xs"
-                    icon={<DeleteIcon />}
-                    aria-label="Delete field"
-                    onClick={() => removeField(field.id)}
-                    colorScheme="red"
-                    variant="ghost"
-                  />
-                </HStack>
-              </HStack>
-              <Input
-                placeholder="Enter text value..."
-                value={field.value}
-                onChange={(e) => updateField(field.id, { value: e.target.value })}
-                size="sm"
-                borderRadius="lg"
-                _focus={{ borderColor: `${config.color}.500` }}
-                bg={cardBg}
-              />
-            </VStack>
-          </Box>
-        );
-
-      case FIELD_TYPES.NUMBER:
-        return (
-          <Box style={indentStyle}>
-            <VStack spacing={2} align="stretch">
-              <HStack justify="space-between">
-                <HStack>
-                  <Icon as={config.icon} color={`${config.color}.500`} />
-                  <Text fontWeight="bold" color={textColor} fontSize="sm">
-                    {field.title}
-                  </Text>
-                  <Badge colorScheme={config.color} variant="subtle" size="sm">
-                    {config.label}
-                  </Badge>
-                </HStack>
-                <HStack spacing={1}>
-                  <IconButton
-                    size="xs"
-                    icon={<EditIcon />}
-                    aria-label="Edit title"
-                    onClick={() => openEditModal(field.id)}
-                    colorScheme="blue"
-                    variant="ghost"
-                  />
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      icon={<AddIcon />}
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="green"
-                    />
-                    <MenuList>
-                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.parentId, FIELD_TYPES.STRING, field.id)}>
-                        Add Text Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.parentId, FIELD_TYPES.NUMBER, field.id)}>
-                        Add Number Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.parentId, FIELD_TYPES.ARRAY, field.id)}>
-                        Add Array Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.parentId, FIELD_TYPES.OBJECT, field.id)}>
-                        Add Object Field
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                  <IconButton
-                    size="xs"
-                    icon={<DeleteIcon />}
-                    aria-label="Delete field"
-                    onClick={() => removeField(field.id)}
-                    colorScheme="red"
-                    variant="ghost"
-                  />
-                </HStack>
-              </HStack>
-              <NumberInput
-                value={field.value}
-                onChange={(value) => updateField(field.id, { value: parseFloat(value) || 0 })}
-                size="sm"
-              >
-                <NumberInputField
-                  borderRadius="lg"
-                  _focus={{ borderColor: `${config.color}.500` }}
-                  bg={cardBg}
-                />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </VStack>
-          </Box>
-        );
-
-      case FIELD_TYPES.ARRAY:
-        return (
-          <Box style={indentStyle}>
-            <VStack spacing={2} align="stretch">
-              <HStack justify="space-between">
-                <HStack>
-                  <Icon as={config.icon} color={`${config.color}.500`} />
-                  <Text fontWeight="bold" color={textColor} fontSize="sm">
-                    {field.title}
-                  </Text>
-                  <Badge colorScheme={config.color} variant="subtle" size="sm">
-                    {config.label} ({field.value.length})
-                  </Badge>
-                </HStack>
-                <HStack spacing={1}>
-                  <IconButton
-                    size="xs"
-                    icon={<EditIcon />}
-                    aria-label="Edit title"
-                    onClick={() => openEditModal(field.id)}
-                    colorScheme="blue"
-                    variant="ghost"
-                  />
-                  <IconButton
-                    size="xs"
-                    icon={<AddIcon />}
-                    aria-label="Add array item"
-                    onClick={() => addArrayItem(field.id)}
-                    colorScheme="purple"
-                    variant="ghost"
-                  />
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      icon={<FiPlus />}
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="green"
-                    />
-                    <MenuList>
-                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.parentId, FIELD_TYPES.STRING, field.id)}>
-                        Add Text Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.parentId, FIELD_TYPES.NUMBER, field.id)}>
-                        Add Number Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.parentId, FIELD_TYPES.ARRAY, field.id)}>
-                        Add Array Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.parentId, FIELD_TYPES.OBJECT, field.id)}>
-                        Add Object Field
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                  <IconButton
-                    size="xs"
-                    icon={<DeleteIcon />}
-                    aria-label="Delete field"
-                    onClick={() => removeField(field.id)}
-                    colorScheme="red"
-                    variant="ghost"
-                  />
-                </HStack>
-              </HStack>
-              <VStack spacing={1} align="stretch">
-                {field.value.map((item, index) => (
-                  <HStack key={index} spacing={2}>
-                    <Text fontSize="xs" color={mutedColor} w="20px">
-                      {index}:
-                    </Text>
-                    <Input
-                      placeholder={`Item ${index + 1}`}
-                      value={item}
-                      onChange={(e) => updateArrayItem(field.id, index, e.target.value)}
-                      size="sm"
-                      borderRadius="lg"
-                      _focus={{ borderColor: `${config.color}.500` }}
-                      bg={cardBg}
-                      flex={1}
-                    />
-                    <IconButton
-                      size="xs"
-                      icon={<DeleteIcon />}
-                      aria-label="Remove item"
-                      onClick={() => removeArrayItem(field.id, index)}
-                      colorScheme="red"
-                      variant="ghost"
-                      isDisabled={field.value.length === 1}
-                    />
-                  </HStack>
-                ))}
-              </VStack>
-            </VStack>
-          </Box>
-        );
-
-      case FIELD_TYPES.OBJECT:
-        return (
-          <Box style={indentStyle}>
-            <VStack spacing={2} align="stretch">
-              <HStack justify="space-between">
-                <HStack>
-                  <IconButton
-                    size="xs"
-                    icon={field.isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
-                    aria-label="Toggle expansion"
-                    onClick={() => toggleExpanded(field.id)}
-                    variant="ghost"
-                  />
-                  <Icon as={config.icon} color={`${config.color}.500`} />
-                  <Text fontWeight="bold" color={textColor} fontSize="sm">
-                    {field.title}
-                  </Text>
-                  <Badge colorScheme={config.color} variant="subtle" size="sm">
-                    {config.label}
-                  </Badge>
-                </HStack>
-                <HStack spacing={1}>
-                  <IconButton
-                    size="xs"
-                    icon={<EditIcon />}
-                    aria-label="Edit title"
-                    onClick={() => openEditModal(field.id)}
-                    colorScheme="blue"
-                    variant="ghost"
-                  />
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      icon={<AddIcon />}
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="green"
-                    />
-                    <MenuList>
-                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.id, FIELD_TYPES.STRING)}>
-                        Add Text Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.id, FIELD_TYPES.NUMBER)}>
-                        Add Number Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.id, FIELD_TYPES.ARRAY)}>
-                        Add Array Field
-                      </MenuItem>
-                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.id, FIELD_TYPES.OBJECT)}>
-                        Add Nested Object
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                  <IconButton
-                    size="xs"
-                    icon={<DeleteIcon />}
-                    aria-label="Delete field"
-                    onClick={() => removeField(field.id)}
-                    colorScheme="red"
-                    variant="ghost"
-                  />
-                </HStack>
-              </HStack>
-            </VStack>
-          </Box>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  // Get visible fields (considering collapsed objects)
-  const visibleFields = useMemo(() => {
-    const visibleFields = [];
-
-    const processField = (field) => {
-      visibleFields.push(field);
-
-      if (field.type === FIELD_TYPES.OBJECT && field.isExpanded) {
-        const children = fields.filter(f => f.parentId === field.id);
-        children.forEach(processField);
-      }
-    };
-
-    fields.filter(f => f.parentId === null).forEach(processField);
-    return visibleFields;
-  }, [fields]);
 
   return (
     <Box 
@@ -773,7 +561,7 @@ export default function PromptJsonEnhanced() {
                     fontSize="sm"
                   >
                     <Icon as={FiCode} mr={2} />
-                    Advanced JSON Generator
+                    AI Image Prompt Generator
                   </Badge>
                   <Heading 
                     color={textColor}
@@ -783,7 +571,7 @@ export default function PromptJsonEnhanced() {
                     bgClip="text"
                     lineHeight="shorter"
                   >
-                    Prompt Modular JSON Enhanced
+                    Midjourney Prompt Builder
                   </Heading>
                   <Text 
                     color={mutedColor} 
@@ -791,11 +579,11 @@ export default function PromptJsonEnhanced() {
                     maxW="2xl"
                     lineHeight="tall"
                   >
-                    Buat JSON kompleks dengan nested objects, arrays, dan berbagai tipe data. Subject terpisah dari struktur JSON.
+                    Buat prompt AI untuk image generation dengan form yang mudah digunakan
                   </Text>
                 </VStack>
 
-                {/* Buttons Section */}
+                {/* Navigation Buttons */}
                 <Box
                   display="flex"
                   gap={4}
@@ -803,21 +591,6 @@ export default function PromptJsonEnhanced() {
                   justify="center"
                   w="full"
                 >
-                  <Button
-                    size="md"
-                    variant="ghost"
-                    colorScheme="teal"
-                    leftIcon={<Icon as={FiSettings} />}
-                    onClick={loadTemplate}
-                    _hover={{
-                      bg: "teal.50",
-                      transform: "translateY(-2px)",
-                      shadow: "lg",
-                    }}
-                    transition="all 0.3s ease"
-                  >
-                    Load Template
-                  </Button>
                   <a
                     href="https://laimonprompt.blogspot.com/"
                     target="_blank"
@@ -865,7 +638,7 @@ export default function PromptJsonEnhanced() {
             </Box>
 
             <Flex gap={8} w="full" direction={{ base: "column", xl: "row" }}>
-              {/* Main Input Card */}
+              {/* Main Form Card */}
               <Box flex={2} minW={0}>
                 <Box
                   bg={cardBg}
@@ -889,113 +662,480 @@ export default function PromptJsonEnhanced() {
                   }}
                 >
                   <VStack spacing={6} align="stretch">
-                    {/* Subject Input */}
+                    {/* Header Controls */}
                     <Box>
-                      <HStack mb={4}>
-                        <Icon as={FiTarget} color="teal.500" fontSize="20" />
-                        <Heading size="md" color={textColor}>
-                          Subject (Terpisah dari JSON)
-                        </Heading>
+                      <HStack justify="space-between" mb={4}>
+                        <HStack>
+                          <Icon as={FiTarget} color="red.500" fontSize="20" />
+                          <Heading size="md" color={textColor}>
+                            Controls
+                          </Heading>
+                        </HStack>
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          variant="solid"
+                          onClick={resetAll}
+                          leftIcon={<Icon as={FiRefreshCw} />}
+                          bg="red.500"
+                          color="white"
+                          _hover={{ bg: "red.600" }}
+                        >
+                          RESET ALL
+                        </Button>
                       </HStack>
-                      <Textarea
-                        size="md"
-                        placeholder="Contoh: Generate image based on the following design specifications"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        borderColor="gray.200"
-                        borderRadius="xl"
-                        _hover={{ borderColor: "teal.300" }}
-                        _focus={{ 
-                          borderColor: "teal.500", 
-                          boxShadow: "0 0 0 3px rgba(20, 184, 166, 0.1)" 
-                        }}
-                        bg={inputBg}
-                        rows={3}
-                        fontSize="md"
-                      />
+
+                      <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
+                        <GridItem>
+                          <FormControl>
+                            <FormLabel fontSize="sm" fontWeight="bold">Mode</FormLabel>
+                            <Select
+                              value={formData.mode}
+                              onChange={(e) => updateFormData('mode', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                            >
+                              {DROPDOWN_OPTIONS.mode.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </GridItem>
+                        <GridItem>
+                          <FormControl>
+                            <FormLabel fontSize="sm" fontWeight="bold">Preset</FormLabel>
+                            <Select
+                              value={formData.preset}
+                              onChange={(e) => updateFormData('preset', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                            >
+                              {DROPDOWN_OPTIONS.preset.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </GridItem>
+                      </Grid>
                     </Box>
 
                     <Divider />
 
-                    {/* Dynamic Fields Section */}
+                    {/* COMPOSITION Section */}
                     <Box>
-                      <HStack justify="space-between" mb={4}>
-                        <HStack>
-                          <Icon as={FiLayers} color="blue.500" fontSize="20" />
-                          <Heading size="md" color={textColor}>
-                            JSON Structure
-                          </Heading>
-                          <Badge colorScheme="blue" variant="subtle">
-                            {fields.length} field{fields.length !== 1 ? 's' : ''}
-                          </Badge>
-                        </HStack>
-                        <Menu>
-                          <MenuButton
-                            as={Button}
-                            leftIcon={<AddIcon />}
-                            size="sm"
-                            colorScheme="teal"
-                            variant="ghost"
-                            _hover={{ bg: "teal.50" }}
-                          >
-                            Add Field
-                          </MenuButton>
-                          <MenuList>
-                            <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(null, FIELD_TYPES.STRING)}>
-                              Text Field
-                            </MenuItem>
-                            <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(null, FIELD_TYPES.NUMBER)}>
-                              Number Field
-                            </MenuItem>
-                            <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(null, FIELD_TYPES.ARRAY)}>
-                              Array Field
-                            </MenuItem>
-                            <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(null, FIELD_TYPES.OBJECT)}>
-                              Object Field
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
+                      <HStack mb={4}>
+                        <Icon as={FiLayers} color="blue.500" fontSize="20" />
+                        <Heading size="md" color={textColor}>
+                          COMPOSITION
+                        </Heading>
                       </HStack>
 
                       <VStack spacing={4} align="stretch">
-                        {visibleFields.map((field) => (
-                          <Box
-                            key={field.id}
-                            p={4}
-                            borderRadius="xl"
-                            border="1px solid"
-                            borderColor={borderColor}
-                            bg={fieldBg}
-                            _hover={{ borderColor: `${FIELD_TYPE_CONFIG[field.type].color}.300` }}
-                            transition="all 0.2s ease"
-                          >
-                            {renderFieldInput(field)}
-                          </Box>
-                        ))}
-
-                        {fields.length === 0 && (
-                          <Box
-                            p={8}
-                            textAlign="center"
-                            borderRadius="xl"
-                            border="2px dashed"
-                            borderColor={borderColor}
-                          >
-                            <Icon as={FiPlus} fontSize="40" color="gray.400" mb={3} />
-                            <Text color="gray.500" mb={3}>
-                              Belum ada field JSON. Klik tombol "Add Field" untuk memulai.
-                            </Text>
-                            <Button
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Digital product</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.digitalProduct}
+                              onChange={(e) => updateFormData('digitalProduct', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
                               size="sm"
-                              colorScheme="teal"
-                              variant="outline"
-                              onClick={loadTemplate}
-                              leftIcon={<Icon as={FiSettings} />}
                             >
-                              Coba Template Modern
-                            </Button>
-                          </Box>
-                        )}
+                              {DROPDOWN_OPTIONS.digitalProduct.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Creature</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.creature}
+                              onChange={(e) => updateFormData('creature', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.creature.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Creature details</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.creatureDetails}
+                              onChange={(e) => updateFormData('creatureDetails', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.creatureDetails.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Background</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.background}
+                              onChange={(e) => updateFormData('background', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.background.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Mood/Vibe/Atmosphere</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.moodVibeAtmosphere}
+                              onChange={(e) => updateFormData('moodVibeAtmosphere', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.moodVibeAtmosphere.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">CUSTOM CREATURE</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= OR/AND type in your creature"
+                              value={formData.customCreature}
+                              onChange={(e) => updateFormData('customCreature', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">CUSTOM DETAILS</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= OR/AND type in your custom details"
+                              value={formData.customDetails}
+                              onChange={(e) => updateFormData('customDetails', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+                      </VStack>
+                    </Box>
+
+                    <Divider />
+
+                    {/* STYLE Section */}
+                    <Box>
+                      <HStack mb={4}>
+                        <Icon as={FiLayers} color="purple.500" fontSize="20" />
+                        <Heading size="md" color={textColor}>
+                          STYLE
+                        </Heading>
+                      </HStack>
+
+                      <VStack spacing={4} align="stretch">
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Color palette</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.colorPalette}
+                              onChange={(e) => updateFormData('colorPalette', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.colorPalette.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Color preset</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.colorPreset}
+                              onChange={(e) => updateFormData('colorPreset', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.colorPreset.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">CUSTOM COLORS</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= type in your desired colors"
+                              value={formData.customColors}
+                              onChange={(e) => updateFormData('customColors', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Basic style</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.basicStyle}
+                              onChange={(e) => updateFormData('basicStyle', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.basicStyle.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Art style</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.artStyle}
+                              onChange={(e) => updateFormData('artStyle', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.artStyle.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Style details</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.styleDetails}
+                              onChange={(e) => updateFormData('styleDetails', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.styleDetails.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">CUSTOM STYLE OR DETAILS</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= type in your style or details"
+                              value={formData.customStyleOrDetails}
+                              onChange={(e) => updateFormData('customStyleOrDetails', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+                      </VStack>
+                    </Box>
+
+                    <Divider />
+
+                    {/* PARAMETERS Section */}
+                    <Box>
+                      <HStack mb={4}>
+                        <Icon as={FiLayers} color="green.500" fontSize="20" />
+                        <Heading size="md" color={textColor}>
+                          PARAMETERS
+                        </Heading>
+                      </HStack>
+
+                      <VStack spacing={4} align="stretch">
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Midjourney version</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.midjourneyVersion}
+                              onChange={(e) => updateFormData('midjourneyVersion', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.midjourneyVersion.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Stylize value and other</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.stylizeValue}
+                              onChange={(e) => updateFormData('stylizeValue', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.stylizeValue.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Aspect ratio</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.aspectRatio}
+                              onChange={(e) => updateFormData('aspectRatio', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.aspectRatio.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">IMAGE REF. IMAGE</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= Paste the link to the generic reference image"
+                              value={formData.imageRefImage}
+                              onChange={(e) => updateFormData('imageRefImage', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">CHARACTER REF. IMAGE</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= Paste the link to the character reference image"
+                              value={formData.characterRefImage}
+                              onChange={(e) => updateFormData('characterRefImage', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">STYLE REF. IMAGE</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Input
+                              placeholder="<= Paste the link to the style reference image"
+                              value={formData.styleRefImage}
+                              onChange={(e) => updateFormData('styleRefImage', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            />
+                          </GridItem>
+                        </Grid>
+
+                        <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap={4} alignItems="end">
+                          <GridItem>
+                            <Text fontSize="sm" fontWeight="bold">Parameters to exclude</Text>
+                          </GridItem>
+                          <GridItem>
+                            <Select
+                              value={formData.parametersToExclude}
+                              onChange={(e) => updateFormData('parametersToExclude', e.target.value)}
+                              bg={inputBg}
+                              borderRadius="lg"
+                              size="sm"
+                            >
+                              {DROPDOWN_OPTIONS.parametersToExclude.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </Select>
+                          </GridItem>
+                        </Grid>
                       </VStack>
                     </Box>
 
@@ -1014,7 +1154,6 @@ export default function PromptJsonEnhanced() {
                         transform: "translateY(0)",
                       }}
                       onClick={generate}
-                      isDisabled={!subject.trim()}
                       leftIcon={<Icon as={FiZap} />}
                       borderRadius="xl"
                       fontSize="lg"
@@ -1022,14 +1161,14 @@ export default function PromptJsonEnhanced() {
                       transition="all 0.3s ease"
                       w="full"
                     >
-                      Generate JSON Prompt
+                      Generate Prompt
                     </Button>
                   </VStack>
                 </Box>
               </Box>
 
               {/* Result Card */}
-              {prompt && (
+              {(prompt || textPrompt) && (
                 <Box flex={1} minW={{ xl: "400px" }}>
                   <Box
                     bg={cardBg}
@@ -1057,7 +1196,7 @@ export default function PromptJsonEnhanced() {
                         <HStack>
                           <Icon as={FiCode} color="green.500" fontSize="20" />
                           <Heading size="md" color={textColor}>
-                            Complete Prompt
+                            Generated Prompt
                           </Heading>
                           <Badge colorScheme="green" variant="subtle">
                             Ready
@@ -1076,26 +1215,91 @@ export default function PromptJsonEnhanced() {
                         </Button>
                       </HStack>
                       
-                      <Box
-                        bg="gray.900"
-                        p={4}
-                        borderRadius="xl"
-                        maxH="500px"
-                        overflowY="auto"
-                      >
-                        <Code
-                          colorScheme="green"
-                          fontSize="sm"
-                          whiteSpace="pre-wrap"
-                          color="green.300"
-                          bg="transparent"
-                          p={0}
-                          display="block"
-                          lineHeight="tall"
+                      {/* Format Selection */}
+                      <HStack spacing={2}>
+                        <Text fontSize="sm" color={mutedColor}>Format:</Text>
+                        <Button
+                          size="xs"
+                          variant={outputFormat === "text" ? "solid" : "ghost"}
+                          colorScheme="teal"
+                          onClick={() => setOutputFormat("text")}
                         >
-                          {prompt}
-                        </Code>
-                      </Box>
+                          Text
+                        </Button>
+                        <Button
+                          size="xs"
+                          variant={outputFormat === "json" ? "solid" : "ghost"}
+                          colorScheme="blue"
+                          onClick={() => setOutputFormat("json")}
+                        >
+                          JSON
+                        </Button>
+                        <Button
+                          size="xs"
+                          variant={outputFormat === "both" ? "solid" : "ghost"}
+                          colorScheme="purple"
+                          onClick={() => setOutputFormat("both")}
+                        >
+                          Both
+                        </Button>
+                      </HStack>
+
+                      {/* Text Format Display */}
+                      {(outputFormat === "text" || outputFormat === "both") && textPrompt && (
+                        <Box
+                          bg="gray.900"
+                          p={4}
+                          borderRadius="xl"
+                          maxH="250px"
+                          overflowY="auto"
+                          mb={outputFormat === "both" ? 4 : 0}
+                        >
+                          <HStack mb={2}>
+                            <Badge colorScheme="teal" size="sm">Text Format</Badge>
+                          </HStack>
+                          <Code
+                            colorScheme="teal"
+                            fontSize="sm"
+                            whiteSpace="pre-wrap"
+                            color="teal.300"
+                            bg="transparent"
+                            p={0}
+                            display="block"
+                            lineHeight="tall"
+                          >
+                            {textPrompt}
+                          </Code>
+                        </Box>
+                      )}
+
+                      {/* JSON Format Display */}
+                      {(outputFormat === "json" || outputFormat === "both") && prompt && (
+                        <Box
+                          bg="gray.900"
+                          p={4}
+                          borderRadius="xl"
+                          maxH="250px"
+                          overflowY="auto"
+                        >
+                          {outputFormat === "both" && (
+                            <HStack mb={2}>
+                              <Badge colorScheme="blue" size="sm">JSON Format</Badge>
+                            </HStack>
+                          )}
+                          <Code
+                            colorScheme="green"
+                            fontSize="sm"
+                            whiteSpace="pre-wrap"
+                            color="green.300"
+                            bg="transparent"
+                            p={0}
+                            display="block"
+                            lineHeight="tall"
+                          >
+                            {prompt}
+                          </Code>
+                        </Box>
+                      )}
                     </VStack>
                   </Box>
                 </Box>
@@ -1104,34 +1308,6 @@ export default function PromptJsonEnhanced() {
           </VStack>
         </ScaleFade>
       </Container>
-
-      {/* Edit Field Modal */}
-      <Modal isOpen={isEditOpen} onClose={onEditClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Field Name</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl>
-              <FormLabel>Field Name</FormLabel>
-              <Input
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                placeholder="Enter field name..."
-                autoFocus
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={saveEditedTitle} leftIcon={<Icon as={FiSave} />}>
-              Save
-            </Button>
-            <Button variant="ghost" onClick={onEditClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Box>
   );
 }
